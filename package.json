@@ -1,0 +1,15 @@
+{
+  "name": "react-form-element",
+  "version": "0.0.0-alpha.2",
+  "description": "Plugin react to describe HTML Form Elements. Invoke properties to work with this type elements.",
+  "main": "./FormElement.js",
+  "scripts": {},
+  "author": "Jonathan Delgado <hi@jon.soy>",
+  "license": "MIT",
+  "keywords": [
+    "react"
+  ],
+  "dependencies": {
+    "react": "^15.4.1"
+  }
+}
