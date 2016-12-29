@@ -7,9 +7,11 @@
   "author": "Jonathan Delgado <hi@jon.soy>",
   "license": "MIT",
   "keywords": [
-    "react"
+    "react",
+    "react-plugin",
+    "react-addon",
+    "plugin",
+    "addon"
   ],
-  "dependencies": {
-    "react": "^15.4.1"
-  }
+  "dependencies": {}
 }
