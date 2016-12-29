@@ -59,7 +59,7 @@ Invokers.invokeChange = function (optsArg, callback) {
   }
 }
 
-FormElement.transferDOMEvent = function (propNameArg, optsArg) {
+Invokers.transferDOMEvent = function (propNameArg, optsArg) {
   const opts = assign({
     pathProp: isArray(propNameArg) ? propNameArg : ['props', propNameArg],
     reberseArgs: false
