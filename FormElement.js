@@ -1,4 +1,6 @@
 const assign = require('lodash/assign')
+const bind = require('lodash/bind')
+const bindAll = require('lodash/bindAll')
 const get = require('lodash/get')
 const isArray = require('lodash/isArray')
 const isFunction = require('lodash/isFunction')
@@ -28,6 +30,8 @@ const InstallValuePropertie = function (elementArg, optsArg) {
 
   Object.defineProperty(elementArg, opts.nameProperty, {get: GetValueLoader})
 }
+
+FormElement.invokeChange = (thisArg, ...partials) => Invokers.invokeChange.apply(thisArg, partials)
 
 Invokers.invokeChange = function (optsArg, callback) {
   optsArg = (isArray(optsArg) || isString(optsArg)) ? {path: optsArg} : optsArg
@@ -59,6 +63,8 @@ Invokers.invokeChange = function (optsArg, callback) {
   }
 }
 
+FormElement.transferDOMEvent = (thisArg, ...partials) => Invokers.transferDOMEvent.apply(thisArg, partials)
+
 Invokers.transferDOMEvent = function (propNameArg, optsArg) {
   const opts = assign({
     pathProp: isArray(propNameArg) ? propNameArg : ['props', propNameArg],
@@ -83,7 +89,7 @@ Invokers.transferDOMEvent = function (propNameArg, optsArg) {
 }
 
 FormElement.apply = function (elementArg, optsArg) {
-  if (FormElement.isApplied(elementArg)) return
+  if (FormElement.isApplied(elementArg)) return void(0)
 
   const opts = assign({
     defineValue: true,
@@ -91,7 +97,7 @@ FormElement.apply = function (elementArg, optsArg) {
   }, optsArg || {})
 
   enrich.forEach(function (invokerName) {
-    elementArg[invokerName] = Invokers[invokerName].bind(elementArg)
+    elementArg[invokerName] = bind(Invokers[invokerName], elementArg)
   })
 
   if (opts.defineValue === true) {
