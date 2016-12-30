@@ -16,7 +16,7 @@ class MyComp extends React.Component {
   render () {
     render <div>
       <input type="text"
-        onChange={this.invokeChange('value')}
+        onChange={FormElement.invokeChange(this, 'value')}
         value={this.state.value}>
       <div>
         <h2>Preview</h2>
