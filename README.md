@@ -9,18 +9,18 @@ const {FormElement} = require('react-form-element')
 
 class MyComp extends React.Component {
   constructor (props) {
-    this.state = {
-      value
-    }
+    this.state = {value:''}
   }
   render () {
     render <div>
-      <input type="text"
-        onChange={FormElement.invokeChange(this, 'value')}
-        value={this.state.value}>
       <div>
-        <h2>Preview</h2>
+        <input type="text"
+          onChange={FormElement.invokeChange(this, 'value')}
+          value={this.state.value} />
+      </div>
+      <div>
         <div>
+          <h2>Preview</h2>
           <h4>{this.state.value}</h4>
         </div>
       </div>
@@ -29,3 +29,6 @@ class MyComp extends React.Component {
 }
 ```
 
+## API
+
+### `FormElement`
