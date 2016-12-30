@@ -7,7 +7,7 @@
     "node": ">= 6.9.2"
   },
   "scripts": {
-    "postpublish": "echo git tag v$npm_package_version"
+    "postpublish": "git tag v%npm_package_version%"
   },
   "author": "Jonathan Delgado <hi@jon.soy>",
   "license": "MIT",
