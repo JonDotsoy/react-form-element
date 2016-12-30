@@ -1,5 +1,5 @@
 # React From Element
-[![Coverage Status](https://coveralls.io/repos/github/JonDotsoy/react-form-element/badge.svg?branch=master)](https://coveralls.io/github/JonDotsoy/react-form-element?branch=master)
+[![dependencies Status](https://david-dm.org/jondotsoy/react-form-element/status.svg)](https://david-dm.org/jondotsoy/react-form-element)
 
 Plugin react to describe HTML Form Elements. Invoke properties to work with this type elements.
 
