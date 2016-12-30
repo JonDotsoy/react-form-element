@@ -1,6 +1,10 @@
 # React From Element
 Plugin react to describe HTML Form Elements. Invoke properties to work with this type elements.
 
+**Features:**
+- Apply a React Component as Form Element (Only a simulation).
+- Dispatch to events.
+- Update state by events.
 
 ## Examples
 

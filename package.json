@@ -1,6 +1,6 @@
 {
   "name": "react-form-element",
-  "version": "0.0.0-alpha.8.1",
+  "version": "0.0.0-alpha.8.2",
   "description": "Plugin react to describe HTML Form Elements. Invoke properties to work with this type elements.",
   "main": "./FormElement.js",
   "engines": {
@@ -11,12 +11,21 @@
   "license": "MIT",
   "keywords": [
     "react",
-    "react-plugin",
-    "react-addon",
-    "plugin",
-    "addon"
+    "react-plugin"
   ],
   "dependencies": {
     "lodash": "^4.17.3"
-  }
+  },
+  "directories": {
+    "doc": "docs"
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JonDotsoy/react-form-element.git"
+  },
+  "bugs": {
+    "url": "https://github.com/JonDotsoy/react-form-element/issues"
+  },
+  "homepage": "https://github.com/JonDotsoy/react-form-element#readme"
 }
