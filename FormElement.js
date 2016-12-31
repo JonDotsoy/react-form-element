@@ -9,17 +9,36 @@ const isString = require('lodash/isString')
 const set = require('lodash/set')
 const toString = require('lodash/toString')
 const {WrapperUIEvents} = require('./WrapperUIEvents')
+const React = require('react')
 
-// const EventEmitter=require('events')
-class FormElement {}
+
+
+// const EventEmitter = require('events')
+class FormElement extends React.Component {
+
+}
+
+
+/**
+ * Load the value from Component.
+ *
+ * @param {Object} thisArg - Identify the object to work.
+ */
+FormElement.LoadGetValue = function (thisArg) {
+  return isFunction(thisArg.getValue)
+  ? thisArg.getValue()
+  : isFunction(thisArg.getValues)
+    ? thisArg.getValues()
+    : null
+}
+
 
 const TYPE_FORM_ELEMENT = Symbol('Type Form Element')
 const enrich = ['invokeChange', 'transferDOMEvent']
 const Invokers = {}
 
 function GetValueLoader () {
-  if (isFunction(this.getValue)) return this.getValue()
-  else return get(this, ['state', 'value'], null)
+  return FormElement.LoadGetValue(this)
 }
 
 const InstallValuePropertie = function (elementArg, optsArg) {
