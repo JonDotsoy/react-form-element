@@ -1,13 +1,13 @@
 {
   "name": "react-form-element",
-  "version": "0.0.0-alpha.8.5",
+  "version": "15.4.1-beta.0",
   "description": "Plugin react to describe HTML Form Elements. Invoke properties to work with this type elements.",
   "main": "./FormElement.js",
   "engines": {
     "node": ">= 6.9.2"
   },
   "scripts": {
-    "postpublish": "git tag v%npm_package_version%"
+    "postpublish": "git tag v$npm_package_version"
   },
   "author": "Jonathan Delgado <hi@jon.soy>",
   "license": "MIT",
