@@ -3,7 +3,9 @@ const bind = require('lodash/bind')
 const bindAll = require('lodash/bindAll')
 const get = require('lodash/get')
 const isArray = require('lodash/isArray')
+const toPath = require('lodash/toPath')
 const isFunction = require('lodash/isFunction')
+const isObject = require('lodash/isObject')
 const isNull = require('lodash/isNull')
 const isString = require('lodash/isString')
 const set = require('lodash/set')
@@ -15,7 +17,13 @@ const React = require('react')
 
 // const EventEmitter = require('events')
 class FormElement extends React.Component {
-
+  constructor(props) {
+    super(props)
+  }
+  LoadGetValue () { return FormElement.LoadGetValue(this) }
+  InvokeChange (optsArg, callbackArg) { return FormElement.InvokeChange(this, optsArg, callbackArg) }
+  get value () { return this.LoadGetValue() }
+  get values () { return this.LoadGetValue() }
 }
 
 
@@ -33,8 +41,79 @@ FormElement.LoadGetValue = function (thisArg) {
 }
 
 
+/**
+ * Update the current state by a event function, such as an `onChange`.
+ *
+ * @param {Object}   thisArg                              - Identify the object to work.
+ * @param {Object}   [optsArg]                            - Options to Invoke the function.
+ * @param {Object}   [optsArg.source='[0].target.value']  - Where the value comes from.
+ * @param {Object}   [optsArg.path='state.value']         - Where to update the new value.
+ * @param {*}        [optsArg.defaultValue=null]          - Value when you do not find any other value to set.
+ * @param {Function} [callbackArg]                        - The Callback function.
+ *
+ * @return {Function} Function Callback
+ */
+FormElement.InvokeChange = function (thisArg, firstArg, secondArg) {
+  /*
+    Example Load Function:
+
+    FormElement.InvokeChange(MyComponent)
+    FormElement.InvokeChange(MyComponent, MyOpts)
+    FormElement.InvokeChange(MyComponent, MyHandle)
+    FormElement.InvokeChange(MyComponent, MyOpts, MyHandle)
+  */
+  let preOpts
+  let callback
+  let definedCallback = false
+
+  if (isFunction(firstArg)) {
+    definedCallback = true
+    callback = firstArg
+  } else {
+    preOpts = (isArray(firstArg) || isString(firstArg))
+      ? {path: firstArg}
+      : (isObject(firstArg))
+        ? firstArg
+        : {}
+
+    if (isFunction(secondArg)) {
+      definedCallback = true
+      callback = secondArg
+    }
+  }
+
+  const opts = assign({
+    source: [0, 'target', 'value'],
+    path: ['state', 'value'],
+    pathState: [ 'state' ],
+    defaultValue: null,
+    callbackAfterSetState: false,
+    updater: thisArg.setState,
+  }, preOpts)
+
+  return function CallbackEvent (...eventArgs) {
+    const runCallback = (definedCallback===true) ? bind(callback, this, ...eventArgs): null
+    const sourceValue = get(eventArgs, opts.source, opts.defaultValue)
+    const currentState = get(thisArg, opts.pathState, opts.defaultValue)
+    const currentPathState = get(thisArg, opts.path, opts.defaultValue)
+
+    set(thisArg, opts.path, sourceValue)
+
+    if (isFunction(opts.updater)) {
+      opts.updater.apply(thisArg, currentState, (opts.callbackAfterSetState === true && definedCallback === true) ? runCallback : void(0))
+
+      if (opts.callbackAfterSetState !== true && definedCallback === true) {
+        runCallback()
+      }
+    } else if (definedCallback === true) {
+      runCallback()
+    }
+  }
+}
+
+
 const TYPE_FORM_ELEMENT = Symbol('Type Form Element')
-const enrich = ['invokeChange', 'transferDOMEvent']
+const enrich = ['InvokeChange', 'transferDOMEvent']
 const Invokers = {}
 
 function GetValueLoader () {
@@ -50,9 +129,9 @@ const InstallValuePropertie = function (elementArg, optsArg) {
   Object.defineProperty(elementArg, opts.nameProperty, {get: GetValueLoader})
 }
 
-FormElement.invokeChange = (thisArg, ...partials) => Invokers.invokeChange.apply(thisArg, partials)
+// FormElement.InvokeChange = (thisArg, ...partials) => Invokers.InvokeChange.apply(thisArg, partials)
 
-Invokers.invokeChange = function (optsArg, callback) {
+Invokers.InvokeChange = function (optsArg, callback) {
   optsArg = (isArray(optsArg) || isString(optsArg)) ? {path: optsArg} : optsArg
 
   const opts = assign({
