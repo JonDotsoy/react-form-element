@@ -13,19 +13,13 @@ const toString = require('lodash/toString')
 const {WrapperUIEvents} = require('./WrapperUIEvents')
 const React = require('react')
 
-
-
 // const EventEmitter = require('events')
 class FormElement extends React.Component {
-  constructor(props) {
-    super(props)
-  }
   LoadGetValue () { return FormElement.LoadGetValue(this) }
   InvokeChange (optsArg, callbackArg) { return FormElement.InvokeChange(this, optsArg, callbackArg) }
   get value () { return this.LoadGetValue() }
   get values () { return this.LoadGetValue() }
 }
-
 
 /**
  * Load the value from Component.
@@ -34,12 +28,11 @@ class FormElement extends React.Component {
  */
 FormElement.LoadGetValue = function (thisArg) {
   return isFunction(thisArg.getValue)
-  ? thisArg.getValue()
-  : isFunction(thisArg.getValues)
-    ? thisArg.getValues()
-    : null
+    ? thisArg.getValue()
+    : isFunction(thisArg.getValues)
+      ? thisArg.getValues()
+      : get(thisArg, get(thisArg, ['FormElementDefaultPath'], ['state', 'value']), null)
 }
-
 
 /**
  * Update the current state by a event function, such as an `onChange`.
@@ -84,23 +77,24 @@ FormElement.InvokeChange = function (thisArg, firstArg, secondArg) {
 
   const opts = assign({
     source: [0, 'target', 'value'],
-    path: ['state', 'value'],
+    path: get(thisArg, ['FormElementDefaultPath'], ['state', 'value']),
     pathState: [ 'state' ],
     defaultValue: null,
     callbackAfterSetState: false,
     updater: thisArg.setState,
+    transform: null
   }, preOpts)
 
   return function CallbackEvent (...eventArgs) {
-    const runCallback = (definedCallback===true) ? bind(callback, this, ...eventArgs): null
+    const runCallback = (definedCallback === true) ? bind(callback, this, ...eventArgs) : null
     const sourceValue = get(eventArgs, opts.source, opts.defaultValue)
-    const currentState = get(thisArg, opts.pathState, opts.defaultValue)
     const currentPathState = get(thisArg, opts.path, opts.defaultValue)
 
-    set(thisArg, opts.path, sourceValue)
+    const postThisArg = set(thisArg, opts.path, (isFunction(opts.transform) ? opts.transform(sourceValue) : sourceValue))
+    const currentState = get(postThisArg, opts.pathState, opts.defaultValue)
 
     if (isFunction(opts.updater)) {
-      opts.updater.apply(thisArg, currentState, (opts.callbackAfterSetState === true && definedCallback === true) ? runCallback : void(0))
+      opts.updater.apply(postThisArg, currentState, (opts.callbackAfterSetState === true && definedCallback === true) ? runCallback : void (0))
 
       if (opts.callbackAfterSetState !== true && definedCallback === true) {
         runCallback()
@@ -110,7 +104,6 @@ FormElement.InvokeChange = function (thisArg, firstArg, secondArg) {
     }
   }
 }
-
 
 const TYPE_FORM_ELEMENT = Symbol('Type Form Element')
 const enrich = ['InvokeChange', 'transferDOMEvent']
@@ -187,7 +180,7 @@ Invokers.transferDOMEvent = function (propNameArg, optsArg) {
 }
 
 FormElement.apply = function (elementArg, optsArg) {
-  if (FormElement.isApplied(elementArg)) return void(0)
+  if (FormElement.isApplied(elementArg)) return void (0)
 
   const opts = assign({
     defineValue: true,

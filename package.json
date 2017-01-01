@@ -7,7 +7,7 @@
     "node": ">= 6.9.2"
   },
   "scripts": {
-    "postpublish": "git tag v$npm_package_version"
+    "postpublish": "sh -c \"git tag v$npm_package_version\""
   },
   "author": "Jonathan Delgado <hi@jon.soy>",
   "license": "MIT",
@@ -22,7 +22,11 @@
   "directories": {
     "doc": "docs"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "expect.js": "^0.3.1",
+    "mocha": "^3.2.0",
+    "react-addons-test-utils": "^15.4.1"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/JonDotsoy/react-form-element.git"
