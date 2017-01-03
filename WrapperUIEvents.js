@@ -1,5 +1,6 @@
-const isObject = require('lodash/isObject')
+const concat = require('lodash/concat')
 const isFunction = require('lodash/isFunction')
+const isObject = require('lodash/isObject')
 const isString = require('lodash/isString')
 
 /**
@@ -89,6 +90,16 @@ function WrapperUIEvents (thisArg, typeArg, superEventArg) {
   })
 
   this.toString = Object.prototype.toString.bind(this)
+}
+
+WrapperUIEvents.parse = function (thisArg, ...events) {
+  return concat(...events).map((event) => {
+    if (isObject(event) && isString(event.type)) {
+      return new WrapperUIEvents(thisArg, event.type, event)
+    } else {
+      return event
+    }
+  })
 }
 
 // WrapperUIEvents.NONE = NONE

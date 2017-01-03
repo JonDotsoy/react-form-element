@@ -85,16 +85,36 @@ FormElement.InvokeChange = function (thisArg, firstArg, secondArg) {
     transform: null
   }, preOpts)
 
-  return function CallbackEvent (...eventArgs) {
-    const runCallback = (definedCallback === true) ? bind(callback, this, ...eventArgs) : null
+  function CallbackEvent (...eventArgs) {
+    const runCallback = (definedCallback === true)
+      ? bind(callback, thisArg, ...(WrapperUIEvents.parse(thisArg, ...eventArgs)))
+      : null
+
     const sourceValue = get(eventArgs, opts.source, opts.defaultValue)
     const currentPathState = get(thisArg, opts.path, opts.defaultValue)
 
-    const postThisArg = set(thisArg, opts.path, (isFunction(opts.transform) ? opts.transform(sourceValue) : sourceValue))
+    const postThisArg = set(
+      thisArg,
+      opts.path,
+      (
+        isFunction(opts.transform)
+          ? opts.transform(sourceValue)
+          : sourceValue
+      )
+    )
+
     const currentState = get(postThisArg, opts.pathState, opts.defaultValue)
 
     if (isFunction(opts.updater)) {
-      opts.updater.apply(postThisArg, currentState, (opts.callbackAfterSetState === true && definedCallback === true) ? runCallback : void (0))
+      opts.updater.apply(
+        postThisArg,
+        currentState,
+        (
+          (opts.callbackAfterSetState === true && definedCallback === true)
+            ? runCallback
+            : void (0)
+        )
+      )
 
       if (opts.callbackAfterSetState !== true && definedCallback === true) {
         runCallback()
@@ -103,6 +123,8 @@ FormElement.InvokeChange = function (thisArg, firstArg, secondArg) {
       runCallback()
     }
   }
+
+  return bind(process.nextTick, process, CallbackEvent)
 }
 
 const TYPE_FORM_ELEMENT = Symbol('Type Form Element')
