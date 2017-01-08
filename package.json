@@ -1,13 +1,14 @@
 {
   "name": "react-form-element",
-  "version": "15.4.1-beta.0",
+  "version": "15.4.1-rc.0",
   "description": "Plugin react to describe HTML Form Elements. Invoke properties to work with this type elements.",
   "main": "./FormElement.js",
   "engines": {
     "node": ">= 6.9.2"
   },
   "scripts": {
-    "postpublish": "sh -c \"git tag v$npm_package_version\""
+    "postpublish": "sh -c \"git tag v$npm_package_version\"",
+    "test": "mocha -w"
   },
   "author": "Jonathan Delgado <hi@jon.soy>",
   "license": "MIT",
@@ -16,6 +17,7 @@
     "react-addon"
   ],
   "dependencies": {
+    "debug": "^2.6.0",
     "lodash": "^4.17.3",
     "react": "^15.4.1"
   },
@@ -23,9 +25,12 @@
     "doc": "docs"
   },
   "devDependencies": {
+    "chance": "^1.0.4",
     "expect.js": "^0.3.1",
     "mocha": "^3.2.0",
-    "react-addons-test-utils": "^15.4.1"
+    "react-addons-test-utils": "^15.4.1",
+    "react-dom": "^15.4.1",
+    "systemjs": "^0.19.41"
   },
   "repository": {
     "type": "git",

@@ -22,7 +22,7 @@ class MyComp extends React.Component {
     render <div>
       <div>
         <input type="text"
-          onChange={FormElement.invokeChange(this, 'value')}
+          onChange={FormElement.InvokeChange(this, 'value')}
           value={this.state.value} />
       </div>
       <div>
@@ -36,6 +36,33 @@ class MyComp extends React.Component {
 }
 ```
 
-## API
+## Apply FormElement
 
-### `FormElement`
+```javascript
+const {FormElement} = require('react-form-element')
+
+class MyComponent extends React.Component {
+  constructor (props) {
+    this.state = {value: ""}
+    FormElement.implement(this)
+  }
+  render () {
+    return <input onChange={this.InvokeChange(this.transferDOMEvent('onChange'))}>
+  }
+}
+
+class MyAPP extends React.Component {
+  constructor (props) {
+    this.state = {
+     name: ""
+   }
+  }
+
+  render () {
+    return <div>
+      <label>{this.state.name}</label>
+      <MyComponent onChange={FormElement.InvokeChange(this, 'state.name')} />
+    </div>
+  }
+}
+```

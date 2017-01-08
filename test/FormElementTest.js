@@ -1,6 +1,7 @@
 const debug = require('debug')
 
 /* global it describe */
+const sample = require('lodash/sample')
 const expect = require('expect.js')
 const get = require('lodash/get')
 const set = require('lodash/set')
@@ -84,12 +85,75 @@ describe('FormElement', () => {
   })
 
   describe('FormElement.LoadGetValue', () => {
-    it('')
+
+    it('Run LoadGetValue(Component: {getValue()})', () => {
+      const name = chance.name()
+
+      const MyComponent = {
+        getValue: () => name
+      }
+
+      expect(FormElement.LoadGetValue(MyComponent)).to.be(name)
+    })
+
+    it('Run LoadGetValue(Component: {getValues()})', () => {
+      const name = chance.name()
+
+      const MyComponent = {
+        getValues: () => name
+      }
+
+      expect(FormElement.LoadGetValue(MyComponent)).to.be(name)
+    })
+
+    it('Run LoadGetValue(Component: {state: {value}})', () => {
+      const val = sample([chance.name.bind(chance), chance.paragraph.bind(chance)])()
+
+      const MyComponent = {
+        state: {
+          value: val
+        }
+      }
+
+      expect(FormElement.LoadGetValue(MyComponent)).to.be(val)
+    })
+
+    it('Run LoadGetValue(Component: {ref: {myCustomValue}, FormElementDefaultPath: ["ref", "myCustomValue"]})', () => {
+      const val = sample([chance.name.bind(chance), chance.paragraph.bind(chance)])()
+
+      const MyComponent = {
+        FormElementDefaultPath: ['ref', 'myCustomValue'],
+        ref: {
+          myCustomValue: val
+        }
+      }
+
+      expect(FormElement.LoadGetValue(MyComponent)).to.be(val)
+    })
+
   })
-})
 
-describe('WrapperUIEvents', () => {
+  describe('Apply FormElement', () => {
 
+    it('FormElement.implement: formElement', () => {
+      const MyComponent = FormElement.implement({})
+      expect(FormElement.isApplied(MyComponent)).to.be.ok()
+      expect(MyComponent).to.have.property('transferDOMEvent')
+      expect(MyComponent).to.have.property('InvokeChange')
+      expect(MyComponent).to.have.property('value')
+      expect(MyComponent).to.have.property('values')
+    })
 
+    it('formElement.transferDOMEvent("myEvent")', (done) => {
+      const val = sample([chance.name.bind(chance), chance.paragraph.bind(chance)])()
+      const myEvent = function (p) {
+        expect(p).to.be(val)
+        done()
+      }
+      const MyComponent = FormElement.implement({props:{myEvent}})
 
+      MyComponent.transferDOMEvent('myEvent')(val)
+    })
+
+  })
 })

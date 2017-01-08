@@ -5,6 +5,7 @@ const get = require('lodash/get')
 const isArray = require('lodash/isArray')
 const toPath = require('lodash/toPath')
 const isFunction = require('lodash/isFunction')
+const isSymbol = require('lodash/isSymbol')
 const isObject = require('lodash/isObject')
 const isNull = require('lodash/isNull')
 const isString = require('lodash/isString')
@@ -144,41 +145,13 @@ const InstallValuePropertie = function (elementArg, optsArg) {
   Object.defineProperty(elementArg, opts.nameProperty, {get: GetValueLoader})
 }
 
-// FormElement.InvokeChange = (thisArg, ...partials) => Invokers.InvokeChange.apply(thisArg, partials)
-
-Invokers.InvokeChange = function (optsArg, callback) {
-  optsArg = (isArray(optsArg) || isString(optsArg)) ? {path: optsArg} : optsArg
-
-  const opts = assign({
-    scope: null,
-    path: ['value'],
-    pathState: ['state'],
-    pathValue: ['target', 'value'],
-    argNumber: 0,
-    defaultValue: null,
-    callbackSetState: undefined,
-    callbackAfter: false
-  }, optsArg || {})
-
-  const self = !isNull(opts.scope) ? opts.scope : this
-
-  return function (...eventArgs) {
-    const currentState = get(self, opts.pathState, {})
-    const currentValueFromArg = get(eventArgs[opts.argNumber], opts.pathValue, opts.defaultValue)
-    const updateStateState = set(currentState, opts.path, currentValueFromArg)
-
-    self.setState(updateStateState, (...cbArgs) => {
-      if (isFunction(opts.callbackSetState)) opts.callbackSetState.apply(null, cbArgs)
-      if (opts.callbackAfter === true && isFunction(callback)) callback.apply(null, eventArgs)
-    })
-
-    if (opts.callbackAfter !== true && isFunction(callback)) callback.apply(null, eventArgs)
-  }
-}
+Invokers.InvokeChange = FormElement.InvokeChange
 
 FormElement.transferDOMEvent = (thisArg, ...partials) => Invokers.transferDOMEvent.apply(thisArg, partials)
 
 Invokers.transferDOMEvent = function (propNameArg, optsArg) {
+  if (!isString(propNameArg) && !isSymbol(propNameArg)) throw new TypeError('Prop Name Arg is not a String or a Symbol.')
+
   const opts = assign({
     pathProp: isArray(propNameArg) ? propNameArg : ['props', propNameArg],
     reberseArgs: false
@@ -188,11 +161,12 @@ Invokers.transferDOMEvent = function (propNameArg, optsArg) {
   const HandleEvent = get(this, opts.pathProp)
   const isValidHandleEvent = isFunction(HandleEvent)
 
-  return function (event, ...partials) {
+  return function (...partials) {
     if (isValidHandleEvent) {
-      const newEvent = new WrapperUIEvents(self, toString(event.type) + 'Transfer', event)
+      // const newEvent = new WrapperUIEvents(self, toString(event.type) + 'Transfer', event)
 
-      const argsToHandleEvent = [newEvent, ...partials]
+      // const argsToHandleEvent = [newEvent, ...partials]
+      argsToHandleEvent = WrapperUIEvents.parse(self, ...partials)
 
       if (opts.reberseArgs === true) argsToHandleEvent.reverse()
 
@@ -201,7 +175,7 @@ Invokers.transferDOMEvent = function (propNameArg, optsArg) {
   }
 }
 
-FormElement.apply = function (elementArg, optsArg) {
+FormElement.implement = function (elementArg, optsArg) {
   if (FormElement.isApplied(elementArg)) return void (0)
 
   const opts = assign({
@@ -221,6 +195,8 @@ FormElement.apply = function (elementArg, optsArg) {
   }
 
   Object.defineProperty(elementArg, TYPE_FORM_ELEMENT, {get: () => true})
+
+  return elementArg
 }
 
 FormElement.isApplied = function (elementCompareArg) {
