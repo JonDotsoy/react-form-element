@@ -22,7 +22,7 @@ class MyComp extends React.Component {
     render <div>
       <div>
         <input type="text"
-          onChange={FormElement.InvokeChange(this, 'value')}
+          onChange={FormElement.InvokeChange(this, 'state.value')}
           value={this.state.value} />
       </div>
       <div>
