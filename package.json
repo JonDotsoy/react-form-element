@@ -1,6 +1,6 @@
 {
   "name": "react-form-element",
-  "version": "15.4.1-rc.0",
+  "version": "15.4.1-rc.1",
   "description": "Plugin react to describe HTML Form Elements. Invoke properties to work with this type elements.",
   "main": "./FormElement.js",
   "engines": {

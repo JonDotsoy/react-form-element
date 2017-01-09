@@ -109,12 +109,14 @@ FormElement.InvokeChange = function (thisArg, firstArg, secondArg) {
     if (isFunction(opts.updater)) {
       opts.updater.apply(
         postThisArg,
-        currentState,
-        (
-          (opts.callbackAfterSetState === true && definedCallback === true)
-            ? runCallback
-            : void (0)
-        )
+        [
+          currentState,
+          (
+            (opts.callbackAfterSetState === true && definedCallback === true)
+              ? runCallback
+              : void (0)
+          )
+        ]
       )
 
       if (opts.callbackAfterSetState !== true && definedCallback === true) {
@@ -125,7 +127,8 @@ FormElement.InvokeChange = function (thisArg, firstArg, secondArg) {
     }
   }
 
-  return bind(process.nextTick, process, CallbackEvent)
+  return CallbackEvent
+  return bind(CallbackEvent, thisArg)
 }
 
 const TYPE_FORM_ELEMENT = Symbol('Type Form Element')
@@ -184,7 +187,7 @@ FormElement.implement = function (elementArg, optsArg) {
   }, optsArg || {})
 
   enrich.forEach(function (invokerName) {
-    elementArg[invokerName] = bind(Invokers[invokerName], elementArg)
+    elementArg[invokerName] = bind(FormElement[invokerName], elementArg, elementArg)
   })
 
   if (opts.defineValue === true) {
