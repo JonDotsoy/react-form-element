@@ -1,12 +1,13 @@
 {
   "name": "react-form-element",
-  "version": "15.4.1-rc.1",
+  "version": "15.4.1-rc.2",
   "description": "Plugin react to describe HTML Form Elements. Invoke properties to work with this type elements.",
-  "main": "./FormElement.js",
+  "main": "FormElement.js",
   "engines": {
     "node": ">= 6.9.2"
   },
   "scripts": {
+    "build": "babel -d . src",
     "postpublish": "sh -c \"git tag v$npm_package_version\"",
     "test": "mocha -w"
   },
@@ -22,10 +23,16 @@
     "react": "^15.4.1"
   },
   "directories": {
-    "doc": "docs"
+    "doc": "docs",
+    "test": "test"
   },
   "devDependencies": {
+    "babel": "^6.5.2",
+    "babel-cli": "^6.18.0",
+    "babel-plugin-transform-inline-environment-variables": "^6.8.0",
+    "babel-preset-latest": "^6.16.0",
     "chance": "^1.0.4",
+    "envify": "^4.0.0",
     "expect.js": "^0.3.1",
     "mocha": "^3.2.0",
     "react-addons-test-utils": "^15.4.1",
@@ -39,5 +46,13 @@
   "bugs": {
     "url": "https://github.com/JonDotsoy/react-form-element/issues"
   },
-  "homepage": "https://github.com/JonDotsoy/react-form-element#readme"
+  "homepage": "https://github.com/JonDotsoy/react-form-element#readme",
+  "babel": {
+    "plugins": [
+      "transform-inline-environment-variables"
+    ],
+    "presets": [
+      "latest"
+    ]
+  }
 }

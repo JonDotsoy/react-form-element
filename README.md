@@ -3,11 +3,16 @@
 
 Plugin react to describe HTML Form Elements. Invoke properties to work with this type elements.
 
-
 **Features:**
 - Apply a React Component as Form Element (Only a simulation).
 - Dispatch to events.
 - Update state by events.
+
+## Motivation
+
+As a Form Element on HTML5.
+
+- [HTMLInputElement](https://developer.mozilla.org/en-US/docs/Web/API/HTMLInputElement)
 
 ## Examples
 
