@@ -169,7 +169,7 @@ Invokers.transferDOMEvent = function (propNameArg, optsArg) {
       // const newEvent = new WrapperUIEvents(self, toString(event.type) + 'Transfer', event)
 
       // const argsToHandleEvent = [newEvent, ...partials]
-      argsToHandleEvent = WrapperUIEvents.parse(self, ...partials)
+      const argsToHandleEvent = WrapperUIEvents.parse(self, ...partials)
 
       if (opts.reberseArgs === true) argsToHandleEvent.reverse()
 
